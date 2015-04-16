@@ -2,7 +2,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>sp.senac.br</groupId>
+    <groupId>org.mom</groupId>
     <artifactId>mom</artifactId>
     <version>1.0</version>
     <packaging>war</packaging>
@@ -52,6 +52,12 @@
             <groupId>javax</groupId>
             <artifactId>javaee-web-api</artifactId>
             <version>7.0</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>javax.websocket</groupId>
+            <artifactId>javax.websocket-api</artifactId>
+            <version>1.1</version>
             <scope>provided</scope>
         </dependency>
         
@@ -111,7 +117,17 @@
             <artifactId>spring-webmvc</artifactId>
             <version>4.1.1.RELEASE</version>
         </dependency>
-        
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-websocket</artifactId>
+            <version>4.1.1.RELEASE</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-messaging</artifactId>
+            <version>4.1.1.RELEASE</version>
+        </dependency>
+                
         <!-- Persistence Framework -->
         <dependency>
             <groupId>org.springframework.data</groupId>

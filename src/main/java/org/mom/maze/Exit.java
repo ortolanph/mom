@@ -1,4 +1,4 @@
-package sp.senac.br.mom.maze;
+package org.mom.maze;
 
 import java.util.ArrayList;
 import java.util.Arrays;

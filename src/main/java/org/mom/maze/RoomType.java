@@ -1,4 +1,4 @@
-package sp.senac.br.mom.maze;
+package org.mom.maze;
 
 public enum RoomType {
     BEGIN("B"),
