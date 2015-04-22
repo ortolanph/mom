@@ -22,7 +22,7 @@
                 setConnected(true);
                 console.log('Connected: ' + frame);
                 stompClient.subscribe('/topic/response', function(message){
-                    showGreeting(JSON.parse(message));
+                    showGreeting(message);
                 });
             });
         }
@@ -36,15 +36,15 @@
         }
 
         function sendName() {
-            var name = document.getElementById('message').value;
-            stompClient.send("/app/chat", {}, JSON.stringify({ 'message': message }));
+            var message = document.getElementById('message').value;
+            stompClient.send("/app/chat", {}, message);
         }
 
         function showGreeting(message) {
             var response = document.getElementById('response');
             var p = document.createElement('p');
             p.style.wordWrap = 'break-word';
-            p.appendChild(document.createTextNode(message));
+            p.appendChild(document.createTextNode(message.body));
             response.appendChild(p);
         }
     </script>
