@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Room {
+    private final List<Exit> exits;
     private int x;
     private int y;
-    private final List<Exit> exits;
     private RoomType type;
 
     public Room() {
@@ -20,7 +20,7 @@ public class Room {
     public void setX(int x) {
         this.x = x;
     }
-    
+
     public int getY() {
         return y;
     }
@@ -28,7 +28,7 @@ public class Room {
     public void setY(int y) {
         this.y = y;
     }
-    
+
     public void addExit(Exit exit) {
         exits.add(exit);
     }
@@ -44,7 +44,7 @@ public class Room {
     public void setType(RoomType type) {
         this.type = type;
     }
-    
+
     @Override
     public int hashCode() {
         return (x * 1000) + y;
@@ -71,15 +71,15 @@ public class Room {
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
-        
+
         builder.append("[").append(String.format("%06d", hashCode())).append("]")
-               .append("[").append(type.getCode()).append("][")
-                .append((exits.contains(Exit.NORTH))?"N":" ")
-                .append((exits.contains(Exit.EAST))?"E":" ")
-                .append((exits.contains(Exit.SOUTH))?"S":" ")
-                .append((exits.contains(Exit.WEST))?"W":" ")
+                .append("[").append(type.getCode()).append("][")
+                .append((exits.contains(Exit.NORTH)) ? "N" : " ")
+                .append((exits.contains(Exit.EAST)) ? "E" : " ")
+                .append((exits.contains(Exit.SOUTH)) ? "S" : " ")
+                .append((exits.contains(Exit.WEST)) ? "W" : " ")
                 .append("]");
-        
+
         return builder.toString();
     }
 

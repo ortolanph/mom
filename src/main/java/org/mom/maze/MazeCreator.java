@@ -1,11 +1,6 @@
 package org.mom.maze;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Random;
+import java.util.*;
 
 public class MazeCreator {
 
@@ -13,8 +8,8 @@ public class MazeCreator {
     private final int width;
     private final int height;
     private final int totalRooms;
-    private int visitedRooms;
     private final Random random = new Random();
+    private int visitedRooms;
 
     public MazeCreator(int width, int height) {
         this.width = width;
@@ -22,6 +17,60 @@ public class MazeCreator {
         maze = new HashMap<>();
         visitedRooms = 0;
         totalRooms = width * height;
+    }
+
+    public Map<Integer, Room> getMaze() {
+        return new HashMap<>(maze);
+    }
+
+    public void create() {
+        Room room = getFirstRoom();
+
+        while (room != null) {
+            room = walk(room);
+        }
+
+        hunt();
+
+        boolean foundLastRoom = false;
+
+        for (int x = 0; x < width; x++) {
+            for (int y = 0; y < height; y++) {
+                int key = calculateHash(x, y);
+                Room lastRoom = maze.get(key);
+
+                if (lastRoom.getExits().size() == 1 && lastRoom.getType().equals(RoomType.NORMAL)) {
+                    lastRoom.setType(RoomType.END);
+                    maze.put(key, lastRoom);
+                    foundLastRoom = true;
+                    break;
+                }
+            }
+            if (foundLastRoom) {
+                break;
+            }
+        }
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder builder = new StringBuilder();
+
+        for (int x = 0; x < width; x++) {
+            for (int y = 0; y < height; y++) {
+                Room room = maze.get(calculateHash(x, y));
+
+                if (Objects.nonNull(room)) {
+                    builder.append(room.toString());
+                } else {
+                    builder.append("[               ]");
+                }
+            }
+
+            builder.append("\n");
+        }
+
+        return builder.toString();
     }
 
     private Room getFirstRoom() {
@@ -162,59 +211,5 @@ public class MazeCreator {
 
     private Exit getRandomExit(List<Exit> availableExits) {
         return availableExits.get(random.nextInt(availableExits.size()));
-    }
-
-    @Override
-    public String toString() {
-        StringBuilder builder = new StringBuilder();
-
-        for (int x = 0; x < width; x++) {
-            for (int y = 0; y < height; y++) {
-                Room room = maze.get(calculateHash(x, y));
-
-                if (Objects.nonNull(room)) {
-                    builder.append(room.toString());
-                } else {
-                    builder.append("[               ]");
-                }
-            }
-
-            builder.append("\n");
-        }
-
-        return builder.toString();
-    }
-
-    public Map<Integer, Room> getMaze() {
-        return new HashMap<>(maze);
-    }
-
-    public void create() {
-        Room room = getFirstRoom();
-
-        while (room != null) {
-            room = walk(room);
-        }
-
-        hunt();
-
-        boolean foundLastRoom = false;
-        
-        for (int x = 0; x < width; x++) {
-            for (int y = 0; y < height; y++) {
-                int key = calculateHash(x, y);
-                Room lastRoom = maze.get(key);
-
-                if (lastRoom.getExits().size() == 1 && lastRoom.getType().equals(RoomType.NORMAL)) {
-                    lastRoom.setType(RoomType.END);
-                    maze.put(key, lastRoom);
-                    foundLastRoom = true;
-                    break;
-                }
-            }
-            if(foundLastRoom) {
-                break;
-            }
-        }
     }
 }
