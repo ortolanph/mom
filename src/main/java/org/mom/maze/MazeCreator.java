@@ -1,15 +1,20 @@
 package org.mom.maze;
 
 import java.util.*;
+import java.util.stream.IntStream;
+
+import static org.mom.maze.MazeUtils.calculateHash;
 
 public class MazeCreator {
 
+    public static final String EMPTY_ROOM = "[               ]";
     private final Map<Integer, Room> maze;
     private final int width;
     private final int height;
     private final int totalRooms;
     private final Random random = new Random();
     private int visitedRooms;
+
 
     public MazeCreator(int width, int height) {
         this.width = width;
@@ -56,19 +61,14 @@ public class MazeCreator {
     public String toString() {
         StringBuilder builder = new StringBuilder();
 
-        for (int x = 0; x < width; x++) {
-            for (int y = 0; y < height; y++) {
+        IntStream.range(0, height).forEach(y -> {
+            IntStream.range(0, width).forEach(x -> {
                 Room room = maze.get(calculateHash(x, y));
 
-                if (Objects.nonNull(room)) {
-                    builder.append(room.toString());
-                } else {
-                    builder.append("[               ]");
-                }
-            }
-
-            builder.append("\n");
-        }
+                builder.append((Objects.nonNull(room)) ? room.toString() : EMPTY_ROOM);
+            });
+            builder.append('\n');
+        });
 
         return builder.toString();
     }
@@ -159,10 +159,6 @@ public class MazeCreator {
 
     private boolean between(int coord, int limit) {
         return (coord >= 0) && (coord < limit);
-    }
-
-    private int calculateHash(int x, int y) {
-        return (x * 1000) + y;
     }
 
     private List<Exit> getAvailableExits(int x, int y, List<Exit> openedExits) {

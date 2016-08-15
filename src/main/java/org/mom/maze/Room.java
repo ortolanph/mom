@@ -3,6 +3,8 @@ package org.mom.maze;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.mom.maze.MazeUtils.calculateHash;
+
 public class Room {
     private final List<Exit> exits;
     private int x;
@@ -47,7 +49,7 @@ public class Room {
 
     @Override
     public int hashCode() {
-        return (x * 1000) + y;
+        return calculateHash(x, y);
     }
 
     @Override

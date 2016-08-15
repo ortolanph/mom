@@ -16,7 +16,7 @@ public enum Exit {
     private final int dx;
     private final int dy;
 
-    private Exit(int id, int opposite, int dx, int dy) {
+    Exit(int id, int opposite, int dx, int dy) {
         this.id = id;
         this.opposite = opposite;
         this.dx = dx;
@@ -44,12 +44,10 @@ public enum Exit {
     }
 
     public Exit getOppositeExit() {
-        for (Exit exit : values()) {
-            if (exit.getId() == opposite) {
-                return exit;
-            }
-        }
-
-        throw new IllegalArgumentException(name());
+        return Arrays
+                .stream(values())
+                .filter(e -> e.getId() == opposite)
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException(name()));
     }
 }

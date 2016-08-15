@@ -1,17 +1,16 @@
-package org.bulk.maze.graphic;
+package org.mom.maze;
 
-import java.awt.Color;
-import java.awt.Graphics2D;
+import javax.imageio.ImageIO;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.imageio.ImageIO;
-import org.bulk.maze.Exit;
-import org.bulk.maze.Room;
+import java.util.stream.IntStream;
+
+import static org.mom.maze.MazeUtils.calculateHash;
 
 public class GraphicMaze {
 
@@ -38,13 +37,13 @@ public class GraphicMaze {
         canvas.setColor(Color.BLACK);
         canvas.drawRect(0, 0, (width * 10) - 1, (height * 10) - 1);
 
-        for (int x = 0; x < width; x++) {
-            for (int y = 0; y < height; y++) {
+        IntStream.range(0, height).forEach(y -> {
+            IntStream.range(0, width).forEach(x -> {
                 int key = calculateHash(x, y);
                 Room room = myMaze.get(key);
                 drawRoom(x, y, room, canvas);
-            }
-        }
+            });
+        });
 
         try {
             ImageIO.write(image, "PNG", new File(String.format("%s%s%s", System.getProperty("user.home"), System.getProperty("file.separator"), fileName)));
@@ -53,12 +52,8 @@ public class GraphicMaze {
         }
     }
 
-    private int calculateHash(int x, int y) {
-        return (x * 1000) + y;
-    }
-
     private void drawRoom(int x, int y, Room room, Graphics2D canvas) {
-        switch(room.getType()) {
+        switch (room.getType()) {
             case BEGIN:
                 canvas.setColor(Color.GREEN);
                 break;
@@ -69,25 +64,27 @@ public class GraphicMaze {
                 canvas.setColor(Color.RED);
         }
 
-        canvas.fillRect((y * 10) + 2, (x * 10) + 2, 6, 6);
+        canvas.fillRect((x * 10) + 2, (y * 10) + 2, 6, 6);
         canvas.setColor(Color.BLACK);
-        
-        for(Exit exit : room.getExits()) {
-            switch(exit) {
-                case NORTH:
-                    canvas.fillRect((y * 10) + 2, (x * 10), 6, 2);
-                    break;
-                case EAST: 
-                    canvas.fillRect((y * 10) + 8, (x * 10) + 2, 2, 6);
-                    break;
-                case SOUTH: 
-                    canvas.fillRect((y * 10) + 2, (x * 10) + 8, 6, 2);
-                    break;
-                case WEST: 
-                    canvas.fillRect((y * 10), (x * 10) + 2, 2, 6);
-                    break;
-            }
-        }
+
+        room.getExits().stream().forEach(
+                e -> {
+                    switch (e) {
+                        case NORTH:
+                            canvas.fillRect((x * 10) + 2, (y * 10), 6, 2);
+                            break;
+                        case EAST:
+                            canvas.fillRect((x * 10) + 8, (y * 10) + 2, 2, 6);
+                            break;
+                        case SOUTH:
+                            canvas.fillRect((x * 10) + 2, (y * 10) + 8, 6, 2);
+                            break;
+                        case WEST:
+                            canvas.fillRect((x * 10), (y * 10) + 2, 2, 6);
+                            break;
+                    }
+                }
+        );
     }
 
 }
