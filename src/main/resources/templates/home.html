@@ -5,12 +5,13 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <title>Labyrinth</title>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.0-rc.0/angular.min.js"></script>
-    <script src="labyrinth.js"></script>
-    <link rel="stylesheet" href="labyrinth.css"/>
+    <script src="resources/scripts/labyrinth.js"></script>
+    <link rel="stylesheet" href="resources/styles/labyrinth.css"/>
 </head>
 
 <body ng-controller="labyrinthController">
 <h1>Labirinto</h1>
+<p>[{{hash}}]</p>
 <p>
     <svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 300">
         <rect x="0" y="0" width="150" height="150" fill="none" stroke="#000" stroke-width="1"/>
@@ -23,26 +24,34 @@
                     cursor: not-allowed;
                 }
 
+                .BEGIN {
+                    fill: #0c0;
+                }
 
+                .NORMAL {
+                    fill: #fff;
+                }
 
-
+                .END {
+                    fill: #c00;
+                }
         </style>
         <defs>
-            <g id="ground">
-                <rect x="0" y="0" width="70" height="70" fill="#fff" stroke="none"/>
+            <g id="ground" ng-class="myRoom.type">
+                <rect x="0" y="0" width="70" height="70" stroke="none"/>
             </g>
-            <g id="corner">
-                <rect x="1" y="1" width="40" height="40" fill="#fff" stroke="none"/>
+            <g id="corner" ng-class="myRoom.type">
+                <rect x="1" y="1" width="40" height="40" stroke="none"/>
                 <line x1="0" y1="0" x2="30" y2="30" stroke="#000"/>
                 <line x1="30" y1="30" x2="40" y2="30" stroke="#000"/>
                 <line x1="30" y1="30" x2="30" y2="40" stroke="#000"/>
             </g>
             <g id="wall" class="wall-style">
-                <rect x="0" y="1" width="70" height="40" fill="#fff" stroke="none"/>
+                <rect x="0" y="1" width="70" height="40" ng-class="myRoom.type" stroke="none"/>
                 <line x1="0" y1="30" x2="70" y2="30" stroke="#000"/>
             </g>
             <g id="exit" class="exit-style">
-                <rect x="0" y="1" width="70" height="40" fill="#fff" stroke="none"/>
+                <rect x="0" y="1" width="70" height="40" ng-class="myRoom.type" stroke="none"/>
                 <polyline points="0,30 20,30 10,10 60,10 50,30 70,30" stroke="#000" fill="none"/>
                 <polygon points="20,30 20,10 10,10" stroke="#000" fill="#c0c0c0"/>
                 <polygon points="50,30 50,10 60,10" stroke="#000" fill="#c0c0c0"/>
@@ -56,10 +65,10 @@
         <use x="-110" y="0" xlink:href="#corner" transform="rotate(-90, 20, 20)"/>
         <use x="-110" y="-110" xlink:href="#corner" transform="rotate(180, 20, 20)"/>
         <!-- Walls -->
-        <use x="40" y="0" xlink:href="#wall" ng-hide="exits[0]"/>
-        <use x="70" y="-40" xlink:href="#wall" transform="rotate(90, 70, 40)" ng-hide="exits[1]"/>
-        <use x="30" y="-70" xlink:href="#wall" transform="rotate(180, 70, 40)" ng-hide="exits[2]"/>
-        <use x="0" y="-30" xlink:href="#wall" transform="rotate(-90, 70, 40)" ng-hide="exits[3]"/>
+        <use x="40" y="0" xlink:href="#wall" ng-hide="exits[0]" />
+        <use x="70" y="-40" xlink:href="#wall" transform="rotate(90, 70, 40)" ng-hide="exits[1]" />
+        <use x="30" y="-70" xlink:href="#wall" transform="rotate(180, 70, 40)" ng-hide="exits[2]" />
+        <use x="0" y="-30" xlink:href="#wall" transform="rotate(-90, 70, 40)" ng-hide="exits[3]" />
         <!-- Exits -->
         <use x="40" y="0" xlink:href="#exit" ng-click="goNorth()" ng-show="exits[0]"/>
         <use x="70" y="-40" xlink:href="#exit" transform="rotate(90, 70, 40)" ng-click="goEast()" ng-show="exits[1]"/>

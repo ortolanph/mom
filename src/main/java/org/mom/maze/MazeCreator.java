@@ -3,11 +3,12 @@ package org.mom.maze;
 import java.util.*;
 import java.util.stream.IntStream;
 
+import static org.mom.maze.MazeUtils.between;
 import static org.mom.maze.MazeUtils.calculateHash;
 
 public class MazeCreator {
 
-    public static final String EMPTY_ROOM = "[               ]";
+    private static final String EMPTY_ROOM = "[               ]";
     private final Map<Integer, Room> maze;
     private final int width;
     private final int height;
@@ -29,7 +30,7 @@ public class MazeCreator {
     }
 
     public void create() {
-        Room room = getFirstRoom();
+        Room room = createFirstRoom();
 
         while (room != null) {
             room = walk(room);
@@ -73,7 +74,7 @@ public class MazeCreator {
         return builder.toString();
     }
 
-    private Room getFirstRoom() {
+    private Room createFirstRoom() {
         Room room = newRoom(random.nextInt(width), random.nextInt(height));
 
         room.setType(RoomType.BEGIN);
@@ -112,8 +113,8 @@ public class MazeCreator {
 
     private void hunt() {
         while (visitedRooms <= totalRooms) {
-            for (int x = 0; x < width; x++) {
-                for (int y = 0; y < height; y++) {
+            IntStream.range(0, width).forEach(x -> {
+                IntStream.range(0, height).forEach(y -> {
                     int key = calculateHash(x, y);
 
                     if (Objects.isNull(maze.get(key))) {
@@ -141,8 +142,8 @@ public class MazeCreator {
                             }
                         }
                     }
-                }
-            }
+                });
+            });
         }
     }
 
@@ -157,10 +158,6 @@ public class MazeCreator {
         return room;
     }
 
-    private boolean between(int coord, int limit) {
-        return (coord >= 0) && (coord < limit);
-    }
-
     private List<Exit> getAvailableExits(int x, int y, List<Exit> openedExits) {
         List<Exit> availableExits = new ArrayList<>();
 
@@ -168,20 +165,20 @@ public class MazeCreator {
             openedExits = new ArrayList<>();
         }
 
-        List<Exit> remainingExits = Exit.getRemainingExits(openedExits);
+        Exit
+                .getRemainingExits(openedExits)
+                .forEach(e -> {
+                    int nx = x + e.getDx();
+                    int ny = y + e.getDy();
 
-        for (Exit exit : remainingExits) {
-            int nx = x + exit.getDx();
-            int ny = y + exit.getDy();
+                    int key = calculateHash(nx, ny);
 
-            int key = calculateHash(nx, ny);
-
-            if (between(nx, width) && between(ny, height)) {
-                if (Objects.isNull(maze.get(key))) {
-                    availableExits.add(exit);
-                }
-            }
-        }
+                    if (between(nx, width) && between(ny, height)) {
+                        if (Objects.isNull(maze.get(key))) {
+                            availableExits.add(e);
+                        }
+                    }
+                });
 
         return availableExits;
     }
@@ -189,18 +186,20 @@ public class MazeCreator {
     private Map<Exit, Room> lookupVisitedNeighbours(int x, int y) {
         Map<Exit, Room> visitedNeighbours = new HashMap<>();
 
-        for (Exit exit : Exit.ALL_EXITS) {
-            int nx = x + exit.getDx();
-            int ny = y + exit.getDy();
+        Exit.ALL_EXITS.forEach(
+                e -> {
+                    int nx = x + e.getDx();
+                    int ny = y + e.getDy();
 
-            int key = calculateHash(nx, ny);
+                    int key = calculateHash(nx, ny);
 
-            if (between(nx, width) && between(ny, height)) {
-                if (Objects.nonNull(maze.get(key))) {
-                    visitedNeighbours.put(exit, maze.get(key));
+                    if (between(nx, width) && between(ny, height)) {
+                        if (Objects.nonNull(maze.get(key))) {
+                            visitedNeighbours.put(e, maze.get(key));
+                        }
+                    }
                 }
-            }
-        }
+        );
 
         return visitedNeighbours;
     }
