@@ -12,3 +12,12 @@ h1 {
     padding-top: 1em;
     color: #333;
 }
+
+input {
+    border: 2px solid;
+    border-radius: 5px;
+    padding: 15px;
+    margin: 10px;
+    font-size: 1.25em;
+    background-color: #f9f9f9;
+}

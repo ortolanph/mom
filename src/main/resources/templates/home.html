@@ -10,11 +10,11 @@
 </head>
 
 <body ng-controller="labyrinthController">
-<!--<h1>Labirinto</h1>-->
-<p>[{{myRoom}}]</p>
-<p>[{{exits}}]</p>
+<h1>Labirinto</h1>
+<p>Location Coordinartes: {{coordinates}}</p>
+<p>{{message}}</p>
 <p>
-    <svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 300">
+    <svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 150 150" width="300" height="300">
         <rect x="0" y="0" width="150" height="150" fill="none" stroke="#000" stroke-width="1"/>
         <style>
                 .exit-style {
@@ -36,6 +36,7 @@
                 .END {
                     fill: #c00;
                 }
+
         </style>
         <defs>
             <g id="ground" ng-class="myRoom.type">
@@ -66,10 +67,10 @@
         <use x="-110" y="0" xlink:href="#corner" transform="rotate(-90, 20, 20)"/>
         <use x="-110" y="-110" xlink:href="#corner" transform="rotate(180, 20, 20)"/>
         <!-- Walls -->
-        <use x="40" y="0" xlink:href="#wall" ng-hide="exits[0]" />
-        <use x="70" y="-40" xlink:href="#wall" transform="rotate(90, 70, 40)" ng-hide="exits[1]" />
-        <use x="30" y="-70" xlink:href="#wall" transform="rotate(180, 70, 40)" ng-hide="exits[2]" />
-        <use x="0" y="-30" xlink:href="#wall" transform="rotate(-90, 70, 40)" ng-hide="exits[3]" />
+        <use x="40" y="0" xlink:href="#wall" ng-hide="exits[0]"/>
+        <use x="70" y="-40" xlink:href="#wall" transform="rotate(90, 70, 40)" ng-hide="exits[1]"/>
+        <use x="30" y="-70" xlink:href="#wall" transform="rotate(180, 70, 40)" ng-hide="exits[2]"/>
+        <use x="0" y="-30" xlink:href="#wall" transform="rotate(-90, 70, 40)" ng-hide="exits[3]"/>
         <!-- Exits -->
         <use x="40" y="0" xlink:href="#exit" ng-click="goNorth()" ng-show="exits[0]"/>
         <use x="70" y="-40" xlink:href="#exit" transform="rotate(90, 70, 40)" ng-click="goEast()" ng-show="exits[1]"/>
@@ -77,6 +78,9 @@
         <use x="0" y="-30" xlink:href="#exit" transform="rotate(-90, 70, 40)" ng-click="goWest()" ng-show="exits[3]"/>
     </svg>
 </p>
+<form ng-submit="brandNewMaze()">
+    <input type="submit" value="Load a new Labyrinth" ng-show="isThisTheEnd()"/>
+</form>
 </body>
 
 </html>

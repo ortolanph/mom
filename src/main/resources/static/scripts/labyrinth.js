@@ -8,6 +8,14 @@ var labyrinth = angular.module("LabyrinthApp", [])
         return $http.get('/maze/firstRoom');
     };
 
+    this.roomAt = function(x, y) {
+        return $http.get('/maze/roomAt/' + x + '/' + y);
+    };
+
+    this.endMaze = function() {
+        return $http.get('/maze/endMaze');
+    };
+
     this.exits = function( room ) {
         var exits = [false, false, false, false];
 
@@ -29,34 +37,56 @@ var labyrinth = angular.module("LabyrinthApp", [])
         });
 
         return exits;
-    }
-
+    };
 }]).controller('labyrinthController', ['$scope', 'mazeService', ($scope, mazeService) => {
-//    $scope.goNorth = () => {
-//        $scope.changeRoom(0);
-//    };
-//
-//    $scope.goEast = () => {
-//        $scope.changeRoom(1);
-//    };
-//
-//    $scope.goSouth = () => {
-//        $scope.changeRoom(2);
-//    };
-//
-//    $scope.goWest = () => {
-//        $scope.changeRoom(3);
-//    };
-//
-//    $scope.changeRoom = (exit) => {
-//        var exit = mazeService.exitById($scope.myRoom.exits, exit);
-//        $scope.myRoom = mazeService.roomByCoordinate($scope.myRoom.x + exit.dx, $scope.myRoom.y + exit.dy);
-//        $scope.exits = mazeService.retrieveExits($scope.myRoom);
-//        $scope.hash = mazeService.calculateHash($scope.myRoom.x, $scope.myRoom.y);
-//    }
+    $scope.message = 'Loading labyrinth...';
+    $scope.myRoom = {};
+    $scope.exits = [];
+
+    $scope.goNorth = () => {
+        $scope.changeRoom($scope.myRoom.x, $scope.myRoom.y - 1);
+    };
+
+    $scope.goEast = () => {
+        $scope.changeRoom($scope.myRoom.x + 1, $scope.myRoom.y);
+    };
+
+    $scope.goSouth = () => {
+        $scope.changeRoom($scope.myRoom.x, $scope.myRoom.y + 1);
+    };
+
+    $scope.goWest = () => {
+        $scope.changeRoom($scope.myRoom.x - 1, $scope.myRoom.y);
+    };
+
+    $scope.isThisTheEnd = () => {
+        return ( $scope.myRoom.type == 'END' );
+    };
+
+    $scope.loadInformation = (room) => {
+        $scope.myRoom = room;
+        $scope.coordinates = "{" + room.x + ", " + room.y + "}";
+        $scope.exits = mazeService.exits(room);
+    };
+
+    $scope.brandNewMaze = () => {
+        $scope.message = "Loading a new Labyrinth!";
+        mazeService.endMaze().then(function (response) {
+            $scope.loadInformation(response.data);
+        });
+        $scope.message = "Loaded, enjoy!";
+    };
+
+    $scope.changeRoom = (x, y) => {
+        if( ! $scope.isThisTheEnd() ) {
+            mazeService.roomAt(x, y).then(function (response) {
+                $scope.loadInformation(response.data);
+            });
+        }
+    };
 
     mazeService.firstRoom().then(function (response) {
-        $scope.myRoom = response.data;
-        $scope.exits = mazeService.exits($scope.myRoom);
+        $scope.loadInformation(response.data);
+        $scope.message = "Loaded, enjoy!";
     });
 }]);
