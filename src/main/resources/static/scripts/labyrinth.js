@@ -2,55 +2,36 @@ var labyrinth = angular.module("LabyrinthApp", [])
 .config(['$httpProvider', ($httpProvider) => {
     $httpProvider.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 }])
-.service('mazeService', ['$http', '$q', function ($http, $q) {
-    this.getFirstRoom = function() {
-        var defer = $q.defer();
-        $http
-            .get("/maze/firstRoom")
-            .then(
-                function(response) {
-                    defer.resolve(response.data);
-                }
-            );
+.service('mazeService', ['$http', function ($http) {
 
-        return defer.promise;
+    this.firstRoom = function() {
+        return $http.get('/maze/firstRoom');
     };
 
-    this.firstRoom = function () {
-        var myRoom = this.getFirstRoom().then(function(data) { return data; });
-
-        console.log(myRoom);
-
-        return myRoom.get();
-    };
-
-    this.exits = function ( room ) {
+    this.exits = function( room ) {
         var exits = [false, false, false, false];
 
-        room.exits.forEach((exit) => {
+        room.exits.forEach(function (exit) {
             switch(exit) {
                 case "NORTH":
-                    exit[0] = true;
+                    exits[0] = true;
                     break;
                 case "EAST":
-                    exit[1] = true;
+                    exits[1] = true;
                     break;
                 case "SOUTH":
-                    exit[2] = true;
+                    exits[2] = true;
                     break;
                 case "WEST":
-                    exit[3] = true;
+                    exits[3] = true;
                     break;
             }
         });
 
         return exits;
     }
+
 }]).controller('labyrinthController', ['$scope', 'mazeService', ($scope, mazeService) => {
-    $scope.myRoom = mazeService.firstRoom();
-//    $scope.exits = mazeService.exits($scope.myRoom);
-//    $scope.hash = mazeService.calculateHash($scope.myRoom.x, $scope.myRoom.y);
-//
 //    $scope.goNorth = () => {
 //        $scope.changeRoom(0);
 //    };
@@ -73,4 +54,9 @@ var labyrinth = angular.module("LabyrinthApp", [])
 //        $scope.exits = mazeService.retrieveExits($scope.myRoom);
 //        $scope.hash = mazeService.calculateHash($scope.myRoom.x, $scope.myRoom.y);
 //    }
+
+    mazeService.firstRoom().then(function (response) {
+        $scope.myRoom = response.data;
+        $scope.exits = mazeService.exits($scope.myRoom);
+    });
 }]);

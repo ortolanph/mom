@@ -4,14 +4,15 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <title>Labyrinth</title>
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.0-rc.0/angular.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular.min.js"></script>
     <script src="scripts/labyrinth.js"></script>
     <link rel="stylesheet" href="styles/labyrinth.css"/>
 </head>
 
 <body ng-controller="labyrinthController">
-<h1>Labirinto</h1>
+<!--<h1>Labirinto</h1>-->
 <p>[{{myRoom}}]</p>
+<p>[{{exits}}]</p>
 <p>
     <svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 300">
         <rect x="0" y="0" width="150" height="150" fill="none" stroke="#000" stroke-width="1"/>
@@ -19,7 +20,7 @@
                 .exit-style {
                     cursor: pointer;
                 }
-                
+
                 .wall-style {
                     cursor: not-allowed;
                 }
