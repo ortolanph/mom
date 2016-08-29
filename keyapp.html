@@ -1,0 +1,19 @@
+<!DOCTYPE HTML>
+<html ng-app="KeyPressApp">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <title>KeyApp</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular.min.js"></script>
+    <script src="keyapp.js"></script>
+</head>
+
+<body ng-controller="keyController">
+	{{direction}}
+	<key-mapper key-listen="38" take-action="goUp()"/>
+	<key-mapper key-listen="40" take-action="goDown()"/>
+	<key-mapper key-listen="39" take-action="goLeft()"/>
+	<key-mapper key-listen="37" take-action="goRight()"/>	
+</body>
+
+</html>
