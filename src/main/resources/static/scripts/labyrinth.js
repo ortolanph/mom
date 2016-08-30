@@ -2,6 +2,28 @@ var labyrinth = angular.module("LabyrinthApp", [])
 .config(['$httpProvider', ($httpProvider) => {
     $httpProvider.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 }])
+.directive('keyMapper', ['$document', function($document) {
+	return {
+		restrict: 'E',
+		link: function(scope, element, attr) {
+			var keyListen = attr.keyListen;
+
+			function keydown(e) {
+				if (e.keyCode == keyListen) {
+					scope.$apply(attr.takeAction);
+				}
+			}
+
+			function stopListening() {
+				$document.off('keydown', keydown);
+			}
+
+			$document.on('keydown', keydown);
+
+			scope.$on('$destroy', stopListening);
+		}
+	};
+}])
 .service('mazeService', ['$http', function ($http) {
 
     this.firstRoom = function() {
@@ -38,25 +60,37 @@ var labyrinth = angular.module("LabyrinthApp", [])
 
         return exits;
     };
+
+    this.canGo = function(exits, direction) {
+        return exits[direction];
+    }
 }]).controller('labyrinthController', ['$scope', 'mazeService', ($scope, mazeService) => {
     $scope.message = 'Loading labyrinth...';
     $scope.myRoom = {};
     $scope.exits = [];
 
     $scope.goNorth = () => {
-        $scope.changeRoom($scope.myRoom.x, $scope.myRoom.y - 1);
+        if(mazeService.canGo($scope.exits, 0)) {
+            $scope.changeRoom($scope.myRoom.x, $scope.myRoom.y - 1);
+        }
     };
 
     $scope.goEast = () => {
-        $scope.changeRoom($scope.myRoom.x + 1, $scope.myRoom.y);
+        if(mazeService.canGo($scope.exits, 1)) {
+            $scope.changeRoom($scope.myRoom.x + 1, $scope.myRoom.y);
+        }
     };
 
     $scope.goSouth = () => {
-        $scope.changeRoom($scope.myRoom.x, $scope.myRoom.y + 1);
+        if(mazeService.canGo($scope.exits, 2)) {
+            $scope.changeRoom($scope.myRoom.x, $scope.myRoom.y + 1);
+        }
     };
 
     $scope.goWest = () => {
-        $scope.changeRoom($scope.myRoom.x - 1, $scope.myRoom.y);
+        if(mazeService.canGo($scope.exits, 3)) {
+            $scope.changeRoom($scope.myRoom.x - 1, $scope.myRoom.y);
+        }
     };
 
     $scope.isThisTheEnd = () => {
