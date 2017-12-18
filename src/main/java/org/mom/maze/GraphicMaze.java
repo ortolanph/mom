@@ -87,4 +87,13 @@ public class GraphicMaze {
         );
     }
 
+//    public static void main(String[] args) {
+//        for(int i = 4; i < 99; i++) {
+//            MazeCreator creator = new MazeCreator(i, i);
+//            creator.create();
+//            GraphicMaze gm = new GraphicMaze(i, i, creator.getMaze(), String.format("Downloads/mazes/maze%dx%d.png", i, i));
+//            gm.generate();
+//        }
+//    }
+
 }
