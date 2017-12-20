@@ -38,7 +38,7 @@ public class MazeService {
     }
 
     private Map<Integer, Room> createMaze() {
-        MazeCreator mazeCreator = new MazeCreator(5, 5);
+        MazeCreator mazeCreator = new MazeCreator(10, 10);
 
         mazeCreator.create();
         System.out.println(mazeCreator.toString());
