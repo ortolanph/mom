@@ -7,11 +7,16 @@
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular.min.js"></script>
     <script src="scripts/labyrinth.js"></script>
     <link rel="stylesheet" href="styles/labyrinth.css"/>
+    <meta name="description" content="A multiplayer online maze - challenge your friends in a worldwide maze"/>
+    <meta property="og:title" content=" MOMaze - Multiplayer Online Maze"/>
+    <meta property="og:description" content="A multiplayer online maze - challenge your friends in a worldwide maze"/>
+    <meta property="og:url" content="https://momaze.herokuapp.com/"/>
+    <meta property="og:type" content="website"/>
+    <meta property="og:site_name" content=" MOMaze - Multiplayer Online Maze"/>
 </head>
 
 <body ng-controller="labyrinthController">
 <h1>Labirinto</h1>
-<p>Location Coordinartes: {{coordinates}}</p>
 <p>{{message}}</p>
 <p>
     <key-mapper key-listen="38" take-action="goNorth()"/>
@@ -85,6 +90,7 @@
 <form ng-submit="brandNewMaze()">
     <input type="submit" value="Load a new Labyrinth" ng-show="isThisTheEnd()"/>
 </form>
+    <a href="https://github.com/ortolanph/mom">Source Code</a>
 </body>
 
 </html>
